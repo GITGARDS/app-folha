@@ -1,3 +1,9 @@
 .full-width-table {
   width: 100%;
 }
+
+.full-width-table-50 {
+  display: flex;
+  width: 50%;
+  margin-top: 10px;
+}
