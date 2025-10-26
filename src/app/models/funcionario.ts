@@ -33,3 +33,39 @@ export interface Sort {
   sorted: boolean;
   unsorted: boolean;
 }
+
+const FuncionarioInit = {
+  id: 0,
+  nome: '',
+  cargo: '',
+  salarioBase: 0,
+};
+
+const SortInit = {
+  empty: false,
+  sorted: false,
+  unsorted: false,
+};
+
+const PageableInit: Pageable = {
+  pageNumber: 0,
+  pageSize: 0,
+  sort: SortInit,
+  offset: 0,
+  paged: false,
+  unpaged: false,
+};
+
+export const FuncionarioPageableInit: FuncionarioPageable = {
+  content: [],
+  pageable: PageableInit,
+  last: false,
+  totalPages: 0,
+  totalElements: 0,
+  size: 0,
+  number: 0,
+  sort: SortInit,
+  first: false,
+  numberOfElements: 0,
+  empty: false,
+};

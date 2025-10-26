@@ -1,3 +1,10 @@
+.example-container {
+  /* height: 400px; */
+  /* width: 550px; */
+  max-width: 100%;
+  overflow: auto;
+}
+
 .full-width-table {
   width: 100%;
 }
@@ -6,4 +13,27 @@
   display: flex;
   width: 50%;
   margin-top: 10px;
+}
+
+.demo-toggles {
+  display: flex;
+  flex-direction: column;
+}
+
+.demo-toggles * {
+  margin-bottom: 16px;
+}
+
+.demo-options {
+  display: flex;
+  flex-direction: column;
+  width: 600px;
+}
+
+.demo-data * {
+  margin: 16px 0;
+}
+
+.demo-paginator {
+  width: 600px;
 }
