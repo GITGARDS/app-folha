@@ -9,8 +9,6 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatSort, MatSortModule } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
 import { debounceTime, distinctUntilChanged, fromEvent, merge, tap } from "rxjs";
-import { FuncionarioPageable } from "../../../models/funcionario";
-import { Page } from "../../../models/page";
 import { FuncionarioService } from "../../../services/funcionario.service";
 import { FuncionarioFindallDataSource } from "./funcionario-findall-datasource";
 
@@ -40,13 +38,11 @@ export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
 
   funcionarioService = inject(FuncionarioService);
 
-  funcionarioPageable!: FuncionarioPageable;
-
   // paginator inicio
 
   length = 50;
+  pageSize = 10;
   pageIndex = 0;
-  pageSize = 5;
   pageSizeOptions = [5, 10, 15];
 
   hidePageSize = false;
@@ -60,20 +56,7 @@ export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.dataSource = new FuncionarioFindallDataSource(this.funcionarioService);
-    const page: Page = {
-      page: this.pageIndex,
-      size: this.pageSize,
-      sort: 'id',
-    };
-    this.dataSource.loadFuncionarios('', page);
-    this.dataSource.getFuncionarioSubject().subscribe({
-      next: (ret) => {
-        this.funcionarioPageable = ret;
-        this.length = this.funcionarioPageable.totalElements;
-        this.pageIndex = this.funcionarioPageable.number;
-        this.pageSize = this.funcionarioPageable.size;
-      },
-    });
+    this.dataSource.loadFuncionarios('', 0, 5, 'nome');
   }
 
   ngAfterViewInit(): void {
@@ -86,7 +69,11 @@ export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
           this.loadFuncionarioPage();
         })
       )
-      .subscribe();
+      .subscribe({
+        next: (ret) => {
+          console.log('fromEvent', ret);
+        },
+      });
 
     // reset the paginator after sorting
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
@@ -94,32 +81,34 @@ export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
     // on sort or paginate events, load a new page
     merge(this.sort.sortChange, this.paginator.page)
       .pipe(tap(() => this.loadFuncionarioPage()))
-      .subscribe();
+      .subscribe({
+        next: (ret) => {
+          console.log('merge', ret);
+        },
+      });
   }
 
   loadFuncionarioPage() {
-    const page: Page = {
-      page: this.paginator.pageIndex,
-      size: this.paginator.pageSize,
-      sort: this.sort.active,
-    };
+    this.dataSource.funcionarioSubject$.subscribe({
+      next: (ret) => {
+        console.log('loadFuncionarioPage', ret);
+      },
+    });
 
-    this.dataSource.loadFuncionarios(this.input.nativeElement.value, page);
+    this.dataSource.loadFuncionarios(
+      this.input.nativeElement.value,
+      this.paginator.pageIndex,
+      this.paginator.pageSize,
+      'id'
+    );
   }
 
   handlePageEvent(e: PageEvent) {
+    console.log('handlePageEvent', e);
     this.pageEvent = e;
     this.length = e.length;
     this.pageSize = e.pageSize;
     this.pageIndex = e.pageIndex;
-
-    const page: Page = {
-      page: this.pageIndex,
-      size: this.pageSize,
-      sort: 'id',
-    };
-
-    this.dataSource.loadFuncionarios('', page);
   }
 
   setPageSizeOptions(setPageSizeOptionsInput: string) {

@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { environment } from "../../environments/environment.development";
 import { Funcionario, FuncionarioPageable } from "../models/funcionario";
+import { Page } from "../models/page";
 
 @Injectable({
   providedIn: 'root',
@@ -27,17 +28,13 @@ export class FuncionarioService {
     return this.httpClient.get<Funcionario>(`${this.urlBase}/${id}`);
   }
 
-  findAll() {
-    return this.httpClient.get<Funcionario>(this.urlBase);
-  }
-
-  findByNomeContaining(filter: string, page: number, size: number, sort: string) {
-    return this.httpClient.get<FuncionarioPageable>(`${this.urlBase}/findByNomeContaining`, {
+  findAll(filter: string, page: Page) {
+    return this.httpClient.get<FuncionarioPageable>(this.urlBase, {
       params: new HttpParams()
         .set('filter', filter)
-        .set('page', page)
-        .set('size', size)
-        .set('sort', sort),
+        .set('page', page.page)
+        .set('size', page.size)
+        .set('sort', page.sort),
     });
   }
 }

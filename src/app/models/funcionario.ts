@@ -1,3 +1,5 @@
+import { Pageable, PageableInit, Sort, SortInit } from "./page";
+
 export interface Funcionario {
   id: number;
   nome: string;
@@ -19,41 +21,11 @@ export interface FuncionarioPageable {
   empty: boolean;
 }
 
-export interface Pageable {
-  pageNumber: number;
-  pageSize: number;
-  sort: Sort;
-  offset: number;
-  paged: boolean;
-  unpaged: boolean;
-}
-
-export interface Sort {
-  empty: boolean;
-  sorted: boolean;
-  unsorted: boolean;
-}
-
 const FuncionarioInit = {
   id: 0,
   nome: '',
   cargo: '',
   salarioBase: 0,
-};
-
-const SortInit = {
-  empty: false,
-  sorted: false,
-  unsorted: false,
-};
-
-const PageableInit: Pageable = {
-  pageNumber: 0,
-  pageSize: 0,
-  sort: SortInit,
-  offset: 0,
-  paged: false,
-  unpaged: false,
 };
 
 export const FuncionarioPageableInit: FuncionarioPageable = {
