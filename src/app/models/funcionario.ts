@@ -21,7 +21,7 @@ export interface FuncionarioPageable {
   empty: boolean;
 }
 
-const FuncionarioInit = {
+export const FuncionarioInit: Funcionario = {
   id: 0,
   nome: '',
   cargo: '',

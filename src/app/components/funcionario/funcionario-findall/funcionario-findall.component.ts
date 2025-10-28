@@ -1,17 +1,22 @@
-import { JsonPipe } from "@angular/common";
+import { CommonModule } from "@angular/common";
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
+import { MatDialog } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
+import { MatMenuModule } from "@angular/material/menu";
 import { MatPaginator, MatPaginatorModule, PageEvent } from "@angular/material/paginator";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatSort, MatSortModule } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
-import { debounceTime, distinctUntilChanged, fromEvent, merge, tap } from "rxjs";
-import { FuncionarioPageable } from "../../../models/funcionario";
+import { debounceTime, delay, distinctUntilChanged, fromEvent, merge, tap } from "rxjs";
+import { Funcionario, FuncionarioInit, FuncionarioPageable } from "../../../models/funcionario";
 import { Page } from "../../../models/page";
 import { FuncionarioService } from "../../../services/funcionario.service";
+import { FurncionarioFormComponent } from "../furncionario-form/furncionario-form.component";
 import { FuncionarioFindallDataSource } from "./funcionario-findall-datasource";
 
 @Component({
@@ -19,15 +24,18 @@ import { FuncionarioFindallDataSource } from "./funcionario-findall-datasource";
   templateUrl: './funcionario-findall.component.html',
   styleUrl: './funcionario-findall.component.css',
   imports: [
+    CommonModule,
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    JsonPipe,
     MatSlideToggleModule,
     FormsModule,
+    MatProgressSpinnerModule,
+    MatIconModule,
+    MatMenuModule,
   ],
 })
 export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
@@ -42,21 +50,12 @@ export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
 
   funcionarioPageable!: FuncionarioPageable;
 
-  // paginator inicio
-
-  length = 50;
-  pageIndex = 0;
-  pageSize = 5;
-  pageSizeOptions = [5, 10, 15];
-
-  hidePageSize = false;
-  showPageSizeOptions = true;
-  showFirstLastButtons = true;
-  disabled = false;
-
   pageEvent!: PageEvent;
 
-  // paginator fim
+  isLoading = false;
+
+  pageIndex = 0;
+  pageSize = 10;
 
   ngOnInit(): void {
     this.dataSource = new FuncionarioFindallDataSource(this.funcionarioService);
@@ -66,20 +65,32 @@ export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
       sort: 'id',
     };
     this.dataSource.loadFuncionarios('', page);
-    this.dataSource.getFuncionarioSubject().subscribe({
-      next: (ret) => {
-        this.funcionarioPageable = ret;
-        this.length = this.funcionarioPageable.totalElements;
-        this.pageIndex = this.funcionarioPageable.number;
-        this.pageSize = this.funcionarioPageable.size;
-      },
-    });
+    this.dataSource
+      .getFuncionarioSubject()
+      .pipe(delay(10))
+      .subscribe({
+        next: (ret) => {
+          this.funcionarioPageable = ret;
+          this.paginator.length = this.funcionarioPageable.totalElements;
+          this.paginator.pageIndex = this.funcionarioPageable.number;
+          this.paginator.pageSize = this.funcionarioPageable.size;
+        },
+      });
   }
 
   ngAfterViewInit(): void {
+    this.dataSource
+      .getLoadingSubject()
+      .pipe(delay(10))
+      .subscribe({
+        next: (ret) => {
+          this.isLoading = ret;
+        },
+      });
+
     fromEvent(this.input.nativeElement, 'keyup')
       .pipe(
-        debounceTime(500),
+        debounceTime(100),
         distinctUntilChanged(),
         tap(() => {
           this.paginator.pageIndex = 0;
@@ -109,22 +120,79 @@ export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
 
   handlePageEvent(e: PageEvent) {
     this.pageEvent = e;
-    this.length = e.length;
-    this.pageSize = e.pageSize;
-    this.pageIndex = e.pageIndex;
+    this.paginator.length = e.length;
+    this.paginator.pageSize = e.pageSize;
+    this.paginator.pageIndex = e.pageIndex;
 
     const page: Page = {
-      page: this.pageIndex,
-      size: this.pageSize,
-      sort: 'id',
+      page: this.paginator.pageIndex,
+      size: this.paginator.pageSize,
+      sort: this.sort.active,
     };
 
-    this.dataSource.loadFuncionarios('', page);
+    this.dataSource.loadFuncionarios(this.input.nativeElement.value, page);
+  }
+  readonly dialog = inject(MatDialog);
+
+  onCreate() {
+    this.openDialog('novo', FuncionarioInit);
   }
 
-  setPageSizeOptions(setPageSizeOptionsInput: string) {
-    if (setPageSizeOptionsInput) {
-      this.pageSizeOptions = setPageSizeOptionsInput.split(',').map((str) => +str);
+  onEditById(data: Funcionario) {
+    this.openDialog('editar', data);
+  }
+
+  onDeleteById(id: number) {
+    if (confirm('Deseja realmente excluir registro de id=' + id)) {
+      this.funcionarioService.deleteById(id).subscribe({
+        next: (ret) => {
+          alert('Registro excluido com sucesso! ' + ret);
+          this.loadFuncionarioPage();
+        },
+        error: () => {
+          alert('Erro ao tentar excluir registro! ' + id);
+          this.loadFuncionarioPage();
+        },
+      });
     }
+  }
+
+  openDialog(opcao: string, data: Funcionario): void {
+    const dialogRef = this.dialog.open(FurncionarioFormComponent, {
+      data: { opcao: opcao, data: data },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(result);
+      if (result !== undefined) {
+        switch (opcao) {
+          case 'novo':
+            this.funcionarioService.create(result).subscribe({
+              next: (ret) => {
+                alert('Registro cadastrado com sucesso! ' + ret.id);
+                this.loadFuncionarioPage();
+              },
+              error: () => {
+                alert('Erro ao tentar cadastrar registro! ' + result.id);
+              },
+            });
+            break;
+          case 'editar':
+            this.funcionarioService.editById(result).subscribe({
+              next: (ret) => {
+                alert('Registro editado com sucesso! ' + ret.id);
+                this.loadFuncionarioPage();
+              },
+              error: () => {
+                alert('Erro ao tentar editar registro! ' + result.id);
+              },
+            });
+            break;
+
+          default:
+            break;
+        }
+      }
+    });
   }
 }

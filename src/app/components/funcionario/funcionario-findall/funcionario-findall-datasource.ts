@@ -1,5 +1,5 @@
 import { CollectionViewer, DataSource } from "@angular/cdk/collections";
-import { BehaviorSubject, Observable, map } from "rxjs";
+import { BehaviorSubject, Observable, delay, map } from "rxjs";
 import { Funcionario, FuncionarioPageable, FuncionarioPageableInit } from "../../../models/funcionario";
 import { Page } from "../../../models/page";
 import { FuncionarioService } from "../../../services/funcionario.service";
@@ -11,6 +11,7 @@ import { FuncionarioService } from "../../../services/funcionario.service";
  */
 export class FuncionarioFindallDataSource implements DataSource<Funcionario> {
   private funcionarioSubject = new BehaviorSubject<FuncionarioPageable>(FuncionarioPageableInit);
+  private loadingSubject = new BehaviorSubject<boolean>(false);
 
   getFuncionarioSubject() {
     return this.funcionarioSubject.asObservable();
@@ -18,6 +19,14 @@ export class FuncionarioFindallDataSource implements DataSource<Funcionario> {
 
   setFuncionarioSubject(value: FuncionarioPageable) {
     this.funcionarioSubject.next(value);
+  }
+
+  getLoadingSubject() {
+    return this.loadingSubject.asObservable();
+  }
+
+  setLoadingSubject(value: boolean) {
+    this.loadingSubject.next(value);
   }
 
   constructor(private fucionarioService: FuncionarioService) {}
@@ -31,16 +40,23 @@ export class FuncionarioFindallDataSource implements DataSource<Funcionario> {
   }
   disconnect(collectionViewer: CollectionViewer): void {
     this.funcionarioSubject.complete();
+    this.loadingSubject.complete();
   }
 
   loadFuncionarios(filter: string, page: Page) {
-    this.fucionarioService.findAll(filter, page).subscribe({
-      next: (pageable) => {
-        this.setFuncionarioSubject(pageable);
-      },
-      error: () => {
-        this.setFuncionarioSubject(FuncionarioPageableInit);
-      },
-    });
+    this.setLoadingSubject(true);
+    this.fucionarioService
+      .findAll(filter, page)
+      .pipe(delay(100))
+      .subscribe({
+        next: (pageable) => {
+          this.setFuncionarioSubject(pageable);
+          this.setLoadingSubject(false);
+        },
+        error: () => {
+          this.setFuncionarioSubject(FuncionarioPageableInit);
+          this.setLoadingSubject(false);
+        },
+      });
   }
 }

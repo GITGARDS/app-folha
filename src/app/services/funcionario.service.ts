@@ -13,6 +13,7 @@ export class FuncionarioService {
   readonly httpClient = inject(HttpClient);
 
   create(data: Funcionario) {
+    console.log("create", data);
     return this.httpClient.post<Funcionario>(this.urlBase, data);
   }
 
@@ -21,10 +22,10 @@ export class FuncionarioService {
   }
 
   deleteById(id: number) {
-    return this.httpClient.delete<Funcionario>(`${this.urlBase}/${id}`);
+    return this.httpClient.delete<String>(`${this.urlBase}/${id}`);
   }
 
-  findById(id: number) {
+  findById(id: string) {
     return this.httpClient.get<Funcionario>(`${this.urlBase}/${id}`);
   }
 

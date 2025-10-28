@@ -1,16 +1,205 @@
-import { JsonPipe } from "@angular/common";
+import { CollectionViewer, DataSource } from "@angular/cdk/collections";
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatPaginator, MatPaginatorModule, PageEvent } from "@angular/material/paginator";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatSort, MatSortModule } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
+import { BehaviorSubject, Observable, delay, map } from "rxjs";
 import { debounceTime, distinctUntilChanged, fromEvent, merge, tap } from "rxjs";
+import { Funcionario, FuncionarioPageable, FuncionarioPageableInit } from "../../../models/funcionario";
+import { FuncionarioPageable } from "../../../models/funcionario";
+import { Page } from "../../../models/page";
+import { Page } from "../../../models/page";
+import { FuncionarioService } from "../../../services/funcionario.service";
 import { FuncionarioService } from "../../../services/funcionario.service";
 import { FuncionarioFindallDataSource } from "./funcionario-findall-datasource";
+
+/**
+ * Data source for the FuncionarioFindall view. This class should
+ * encapsulate all logic for fetching and manipulating the displayed data
+ * (including sorting, pagination, and filtering).
+ */
+export class FuncionarioFindallDataSource implements DataSource<Funcionario> {
+  private funcionarioSubject = new BehaviorSubject<FuncionarioPageable>(FuncionarioPageableInit);
+  private loadingSubject = new BehaviorSubject<boolean>(false);
+
+  getFuncionarioSubject() {
+    return this.funcionarioSubject.asObservable();
+  }
+
+  setFuncionarioSubject(value: FuncionarioPageable) {
+    this.funcionarioSubject.next(value);
+  }
+
+  getLoadingSubject() {
+    return this.loadingSubject.asObservable();
+  }
+
+  setLoadingSubject(value: boolean) {
+    this.loadingSubject.next(value);
+  }
+
+  constructor(private fucionarioService: FuncionarioService) {}
+
+  connect(collectionViewer: CollectionViewer): Observable<readonly Funcionario[]> {
+    return this.getFuncionarioSubject().pipe(
+      map((ret: FuncionarioPageable) => {
+        return ret.content;
+      })
+    );
+  }
+  disconnect(collectionViewer: CollectionViewer): void {
+    this.funcionarioSubject.complete();
+    this.loadingSubject.complete();
+  }
+
+  loadFuncionarios(filter: string, page: Page) {
+    this.setLoadingSubject(true);
+    this.fucionarioService
+      .findAll(filter, page)
+      .pipe(delay(2000))
+      .subscribe({
+        next: (pageable) => {
+          this.setFuncionarioSubject(pageable);
+          this.setLoadingSubject(false);
+        },
+        error: () => {
+          this.setFuncionarioSubject(FuncionarioPageableInit);
+          this.setLoadingSubject(false);
+        },
+      });
+  }
+}
+
+
+<button matButton="filled">Novo</button>
+
+<mat-form-field class="full-width-table-50">
+  <mat-label>Filter</mat-label>
+  <input matInput placeholder="Ex. Mia" #input />
+</mat-form-field>
+
+<section class="example-container mat-elevation-z2">
+  @if (isLoading) {
+  <div class="example-loading-shade">
+    @if (isLoading) {
+    <mat-spinner></mat-spinner>
+    }
+  </div>
+  }
+
+  <table mat-table [dataSource]="dataSource" class="full-width-table" matSort aria-label="Elements">
+    <!-- Id Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+      <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+    </ng-container>
+
+    <!-- Nome Column -->
+    <ng-container matColumnDef="nome">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
+      <td mat-cell *matCellDef="let row">{{ row.nome }}</td>
+    </ng-container>
+    <!-- Cargo Column -->
+    <ng-container matColumnDef="cargo">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Cargo</th>
+      <td mat-cell *matCellDef="let row">{{ row.cargo }}</td>
+    </ng-container>
+    <!-- Salario Base Column -->
+    <ng-container matColumnDef="salarioBase">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Salario Base</th>
+      <td mat-cell *matCellDef="let row">{{ row.salarioBase }}</td>
+    </ng-container>
+    <!-- Acoes Column -->
+    <ng-container matColumnDef="acoes">
+      <th mat-header-cell *matHeaderCellDef>Acoes</th>
+      <td mat-cell *matCellDef="let row">
+        <button matButton="filled" color="primary">Editar</button>
+        <button matButton="filled" color="warn">Excluir</button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+  <mat-paginator
+    class="demo-paginator"
+    (page)="handlePageEvent($event)"
+    [showFirstLastButtons]="true"
+    [pageSizeOptions]="[5, 10, 15]"
+    aria-label="Select page"
+  >
+  </mat-paginator>
+</section>
+
+
+.example-container {
+  /* height: 400px; */
+  /* width: 550px; */
+  max-width: 100%;
+  overflow: auto;
+  position: relative;
+}
+
+.example-table-container {
+  position: relative;
+  min-height: 200px;
+  max-height: 400px;
+  overflow: auto;
+}
+
+.example-loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 56px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.full-width-table {
+  width: 100%;
+}
+
+.full-width-table-50 {
+  display: flex;
+  width: 50%;
+  margin-top: 10px;
+}
+
+.demo-toggles {
+  display: flex;
+  flex-direction: column;
+}
+
+.demo-toggles * {
+  margin-bottom: 16px;
+}
+
+.demo-options {
+  display: flex;
+  flex-direction: column;
+  width: 600px;
+}
+
+.demo-data * {
+  margin: 16px 0;
+}
+
+.demo-paginator {
+  width: 600px;
+}
+
+
 
 @Component({
   selector: 'app-funcionario-findall',
@@ -23,9 +212,9 @@ import { FuncionarioFindallDataSource } from "./funcionario-findall-datasource";
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    JsonPipe,
     MatSlideToggleModule,
     FormsModule,
+    MatProgressSpinnerModule,
   ],
 })
 export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
@@ -38,42 +227,49 @@ export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
 
   funcionarioService = inject(FuncionarioService);
 
-  // paginator inicio
-
-  length = 50;
-  pageSize = 10;
-  pageIndex = 0;
-  pageSizeOptions = [5, 10, 15];
-
-  hidePageSize = false;
-  showPageSizeOptions = true;
-  showFirstLastButtons = true;
-  disabled = false;
+  funcionarioPageable!: FuncionarioPageable;
 
   pageEvent!: PageEvent;
 
-  // paginator fim
+  isLoading = false;
 
   ngOnInit(): void {
     this.dataSource = new FuncionarioFindallDataSource(this.funcionarioService);
-    this.dataSource.loadFuncionarios('', 0, 5, 'nome');
+    const page: Page = {
+      page: 0,
+      size: 5,
+      sort: 'id',
+    };
+    this.dataSource.loadFuncionarios('', page);
+    this.dataSource
+      .getFuncionarioSubject()
+      .subscribe({
+        next: (ret) => {
+          this.funcionarioPageable = ret;
+          this.paginator.length = this.funcionarioPageable.totalElements;
+          this.paginator.pageIndex = this.funcionarioPageable.number;
+          this.paginator.pageSize = this.funcionarioPageable.size;
+        },
+      });
   }
 
   ngAfterViewInit(): void {
+    this.dataSource.getLoadingSubject().subscribe({
+      next: (ret) => {
+        this.isLoading = ret;
+      },
+    });
+
     fromEvent(this.input.nativeElement, 'keyup')
       .pipe(
-        debounceTime(500),
+        debounceTime(300),
         distinctUntilChanged(),
         tap(() => {
           this.paginator.pageIndex = 0;
           this.loadFuncionarioPage();
         })
       )
-      .subscribe({
-        next: (ret) => {
-          console.log('fromEvent', ret);
-        },
-      });
+      .subscribe();
 
     // reset the paginator after sorting
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
@@ -81,39 +277,31 @@ export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
     // on sort or paginate events, load a new page
     merge(this.sort.sortChange, this.paginator.page)
       .pipe(tap(() => this.loadFuncionarioPage()))
-      .subscribe({
-        next: (ret) => {
-          console.log('merge', ret);
-        },
-      });
+      .subscribe();
   }
 
   loadFuncionarioPage() {
-    this.dataSource.funcionarioSubject$.subscribe({
-      next: (ret) => {
-        console.log('loadFuncionarioPage', ret);
-      },
-    });
+    const page: Page = {
+      page: this.paginator.pageIndex,
+      size: this.paginator.pageSize,
+      sort: this.sort.active ? this.sort.active : 'id',
+    };
 
-    this.dataSource.loadFuncionarios(
-      this.input.nativeElement.value,
-      this.paginator.pageIndex,
-      this.paginator.pageSize,
-      'id'
-    );
+    this.dataSource.loadFuncionarios(this.input.nativeElement.value, page);
   }
 
   handlePageEvent(e: PageEvent) {
-    console.log('handlePageEvent', e);
     this.pageEvent = e;
-    this.length = e.length;
-    this.pageSize = e.pageSize;
-    this.pageIndex = e.pageIndex;
-  }
+    this.paginator.length = e.length;
+    this.paginator.pageSize = e.pageSize;
+    this.paginator.pageIndex = e.pageIndex;
 
-  setPageSizeOptions(setPageSizeOptionsInput: string) {
-    if (setPageSizeOptionsInput) {
-      this.pageSizeOptions = setPageSizeOptionsInput.split(',').map((str) => +str);
-    }
+    const page: Page = {
+      page: this.paginator.pageIndex,
+      size: this.paginator.pageSize,
+      sort: this.sort.active ? this.sort.active : 'id',
+    };
+
+    this.dataSource.loadFuncionarios(this.input.nativeElement.value, page);
   }
 }
