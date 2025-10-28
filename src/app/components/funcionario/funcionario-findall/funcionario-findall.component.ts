@@ -8,6 +8,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatPaginator, MatPaginatorModule, PageEvent } from "@angular/material/paginator";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatSort, MatSortModule } from "@angular/material/sort";
@@ -36,6 +37,7 @@ import { FuncionarioFindallDataSource } from "./funcionario-findall-datasource";
     MatProgressSpinnerModule,
     MatIconModule,
     MatMenuModule,
+    MatProgressBarModule
   ],
 })
 export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
@@ -146,7 +148,6 @@ export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
     if (confirm('Deseja realmente excluir registro de id=' + id)) {
       this.funcionarioService.deleteById(id).subscribe({
         next: (ret) => {
-          alert('Registro excluido com sucesso! ' + ret);
           this.loadFuncionarioPage();
         },
         error: () => {
@@ -169,7 +170,6 @@ export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
           case 'novo':
             this.funcionarioService.create(result).subscribe({
               next: (ret) => {
-                alert('Registro cadastrado com sucesso! ' + ret.id);
                 this.loadFuncionarioPage();
               },
               error: () => {
@@ -180,7 +180,6 @@ export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
           case 'editar':
             this.funcionarioService.editById(result).subscribe({
               next: (ret) => {
-                alert('Registro editado com sucesso! ' + ret.id);
                 this.loadFuncionarioPage();
               },
               error: () => {

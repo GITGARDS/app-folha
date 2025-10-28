@@ -1,143 +1,104 @@
-import { CollectionViewer, DataSource } from "@angular/cdk/collections";
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, inject } from "@angular/core";
-import { FormsModule } from "@angular/forms";
-import { MatButtonModule } from "@angular/material/button";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatInputModule } from "@angular/material/input";
-import { MatPaginator, MatPaginatorModule, PageEvent } from "@angular/material/paginator";
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
-import { MatSort, MatSortModule } from "@angular/material/sort";
-import { MatTableModule } from "@angular/material/table";
-import { BehaviorSubject, Observable, delay, map } from "rxjs";
-import { debounceTime, distinctUntilChanged, fromEvent, merge, tap } from "rxjs";
-import { Funcionario, FuncionarioPageable, FuncionarioPageableInit } from "../../../models/funcionario";
-import { FuncionarioPageable } from "../../../models/funcionario";
-import { Page } from "../../../models/page";
-import { Page } from "../../../models/page";
-import { FuncionarioService } from "../../../services/funcionario.service";
-import { FuncionarioService } from "../../../services/funcionario.service";
-import { FuncionarioFindallDataSource } from "./funcionario-findall-datasource";
+<div class="container-principal">
+  <button matFab (click)="onCreate()">
+    <mat-icon>add</mat-icon>
+  </button>
 
-/**
- * Data source for the FuncionarioFindall view. This class should
- * encapsulate all logic for fetching and manipulating the displayed data
- * (including sorting, pagination, and filtering).
- */
-export class FuncionarioFindallDataSource implements DataSource<Funcionario> {
-  private funcionarioSubject = new BehaviorSubject<FuncionarioPageable>(FuncionarioPageableInit);
-  private loadingSubject = new BehaviorSubject<boolean>(false);
+  <mat-form-field class="full-width-table-50">
+    <mat-label>Filter</mat-label>
+    <input matInput placeholder="Ex. Mia" #input />
+  </mat-form-field>
 
-  getFuncionarioSubject() {
-    return this.funcionarioSubject.asObservable();
-  }
-
-  setFuncionarioSubject(value: FuncionarioPageable) {
-    this.funcionarioSubject.next(value);
-  }
-
-  getLoadingSubject() {
-    return this.loadingSubject.asObservable();
-  }
-
-  setLoadingSubject(value: boolean) {
-    this.loadingSubject.next(value);
-  }
-
-  constructor(private fucionarioService: FuncionarioService) {}
-
-  connect(collectionViewer: CollectionViewer): Observable<readonly Funcionario[]> {
-    return this.getFuncionarioSubject().pipe(
-      map((ret: FuncionarioPageable) => {
-        return ret.content;
-      })
-    );
-  }
-  disconnect(collectionViewer: CollectionViewer): void {
-    this.funcionarioSubject.complete();
-    this.loadingSubject.complete();
-  }
-
-  loadFuncionarios(filter: string, page: Page) {
-    this.setLoadingSubject(true);
-    this.fucionarioService
-      .findAll(filter, page)
-      .pipe(delay(2000))
-      .subscribe({
-        next: (pageable) => {
-          this.setFuncionarioSubject(pageable);
-          this.setLoadingSubject(false);
-        },
-        error: () => {
-          this.setFuncionarioSubject(FuncionarioPageableInit);
-          this.setLoadingSubject(false);
-        },
-      });
-  }
-}
-
-
-<button matButton="filled">Novo</button>
-
-<mat-form-field class="full-width-table-50">
-  <mat-label>Filter</mat-label>
-  <input matInput placeholder="Ex. Mia" #input />
-</mat-form-field>
-
-<section class="example-container mat-elevation-z2">
-  @if (isLoading) {
-  <div class="example-loading-shade">
+  <section class="example-container mat-elevation-z2">
     @if (isLoading) {
-    <mat-spinner></mat-spinner>
+    <div class="example-loading-shade">
+      @if (isLoading) {
+      <!-- <mat-spinner></mat-spinner> -->
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      }
+    </div>
     }
-  </div>
-  }
 
-  <table mat-table [dataSource]="dataSource" class="full-width-table" matSort aria-label="Elements">
-    <!-- Id Column -->
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
-      <td mat-cell *matCellDef="let row">{{ row.id }}</td>
-    </ng-container>
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      class="full-width-table"
+      matSort
+      matSortActive="id"
+      matSortDisableClear
+      matSortDirection="asc"
+      aria-label="Elements"
+    >
+      <!-- Id Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+        <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+      </ng-container>
 
-    <!-- Nome Column -->
-    <ng-container matColumnDef="nome">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
-      <td mat-cell *matCellDef="let row">{{ row.nome }}</td>
-    </ng-container>
-    <!-- Cargo Column -->
-    <ng-container matColumnDef="cargo">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Cargo</th>
-      <td mat-cell *matCellDef="let row">{{ row.cargo }}</td>
-    </ng-container>
-    <!-- Salario Base Column -->
-    <ng-container matColumnDef="salarioBase">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Salario Base</th>
-      <td mat-cell *matCellDef="let row">{{ row.salarioBase }}</td>
-    </ng-container>
-    <!-- Acoes Column -->
-    <ng-container matColumnDef="acoes">
-      <th mat-header-cell *matHeaderCellDef>Acoes</th>
-      <td mat-cell *matCellDef="let row">
-        <button matButton="filled" color="primary">Editar</button>
-        <button matButton="filled" color="warn">Excluir</button>
-      </td>
-    </ng-container>
+      <!-- Nome Column -->
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
+        <td mat-cell *matCellDef="let row">{{ row.nome }}</td>
+      </ng-container>
+      <!-- Cargo Column -->
+      <ng-container matColumnDef="cargo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Cargo</th>
+        <td mat-cell *matCellDef="let row">{{ row.cargo }}</td>
+      </ng-container>
+      <!-- Salario Base Column -->
+      <ng-container matColumnDef="salarioBase">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Salario Base</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.salarioBase | currency }}
+        </td>
+      </ng-container>
+      <!-- Acoes Column -->
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef>Acoes</th>
+        <td mat-cell *matCellDef="let row">
+          <button
+            matIconButton
+            [matMenuTriggerFor]="menu"
+            aria-label="Example icon-button with a menu"
+          >
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="onEditById(row)">
+              <mat-icon>edit</mat-icon>
+              <span>Editar</span>
+            </button>
+            <button mat-menu-item (click)="onDeleteById(row.id)">
+              <mat-icon>delete</mat-icon>
+              <span>Excluir</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
-  <mat-paginator
-    class="demo-paginator"
-    (page)="handlePageEvent($event)"
-    [showFirstLastButtons]="true"
-    [pageSizeOptions]="[5, 10, 15]"
-    aria-label="Select page"
-  >
-  </mat-paginator>
-</section>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      <ng-container *matNoDataRow>
+        <tr class="mat-row">
+          <td class="mat-cell">Nenhum registro encontrado...</td>
+        </tr>
+      </ng-container>
+    </table>
+    <mat-paginator
+      class="demo-paginator"
+      (page)="handlePageEvent($event)"
+      [showFirstLastButtons]="true"
+      [pageSizeOptions]="[5, 10]"
+      aria-label="Select page"
+    >
+    </mat-paginator>
+  </section>
+</div>
 
 
+.container-principal{
+  padding: 5px;
+}
 .example-container {
   /* height: 400px; */
   /* width: 550px; */
@@ -197,111 +158,4 @@ export class FuncionarioFindallDataSource implements DataSource<Funcionario> {
 
 .demo-paginator {
   width: 600px;
-}
-
-
-
-@Component({
-  selector: 'app-funcionario-findall',
-  templateUrl: './funcionario-findall.component.html',
-  styleUrl: './funcionario-findall.component.css',
-  imports: [
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSlideToggleModule,
-    FormsModule,
-    MatProgressSpinnerModule,
-  ],
-})
-export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild('input') input!: ElementRef;
-  dataSource!: FuncionarioFindallDataSource;
-
-  displayedColumns = ['id', 'nome', 'cargo', 'salarioBase', 'acoes'];
-
-  funcionarioService = inject(FuncionarioService);
-
-  funcionarioPageable!: FuncionarioPageable;
-
-  pageEvent!: PageEvent;
-
-  isLoading = false;
-
-  ngOnInit(): void {
-    this.dataSource = new FuncionarioFindallDataSource(this.funcionarioService);
-    const page: Page = {
-      page: 0,
-      size: 5,
-      sort: 'id',
-    };
-    this.dataSource.loadFuncionarios('', page);
-    this.dataSource
-      .getFuncionarioSubject()
-      .subscribe({
-        next: (ret) => {
-          this.funcionarioPageable = ret;
-          this.paginator.length = this.funcionarioPageable.totalElements;
-          this.paginator.pageIndex = this.funcionarioPageable.number;
-          this.paginator.pageSize = this.funcionarioPageable.size;
-        },
-      });
-  }
-
-  ngAfterViewInit(): void {
-    this.dataSource.getLoadingSubject().subscribe({
-      next: (ret) => {
-        this.isLoading = ret;
-      },
-    });
-
-    fromEvent(this.input.nativeElement, 'keyup')
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        tap(() => {
-          this.paginator.pageIndex = 0;
-          this.loadFuncionarioPage();
-        })
-      )
-      .subscribe();
-
-    // reset the paginator after sorting
-    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
-
-    // on sort or paginate events, load a new page
-    merge(this.sort.sortChange, this.paginator.page)
-      .pipe(tap(() => this.loadFuncionarioPage()))
-      .subscribe();
-  }
-
-  loadFuncionarioPage() {
-    const page: Page = {
-      page: this.paginator.pageIndex,
-      size: this.paginator.pageSize,
-      sort: this.sort.active ? this.sort.active : 'id',
-    };
-
-    this.dataSource.loadFuncionarios(this.input.nativeElement.value, page);
-  }
-
-  handlePageEvent(e: PageEvent) {
-    this.pageEvent = e;
-    this.paginator.length = e.length;
-    this.paginator.pageSize = e.pageSize;
-    this.paginator.pageIndex = e.pageIndex;
-
-    const page: Page = {
-      page: this.paginator.pageIndex,
-      size: this.paginator.pageSize,
-      sort: this.sort.active ? this.sort.active : 'id',
-    };
-
-    this.dataSource.loadFuncionarios(this.input.nativeElement.value, page);
-  }
 }

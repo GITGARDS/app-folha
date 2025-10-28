@@ -47,7 +47,7 @@ export class FuncionarioFindallDataSource implements DataSource<Funcionario> {
     this.setLoadingSubject(true);
     this.fucionarioService
       .findAll(filter, page)
-      .pipe(delay(100))
+      .pipe(delay(10))
       .subscribe({
         next: (pageable) => {
           this.setFuncionarioSubject(pageable);

@@ -29,9 +29,9 @@ export class FurncionarioFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   form = this.fb.group({
     id: [0],
-    nome: ["adriano 2", Validators.required],
-    cargo: ["22", Validators.required],
-    salarioBase: [22, Validators.required],
+    nome: ["ultimo registro", Validators.required],
+    cargo: ["999", Validators.required],
+    salarioBase: [999, Validators.required],
   });
   readonly dialogRef = inject(MatDialogRef<FurncionarioFormComponent>);
   readonly data = inject<any>(MAT_DIALOG_DATA);
