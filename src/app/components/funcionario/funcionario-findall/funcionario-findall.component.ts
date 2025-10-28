@@ -37,7 +37,7 @@ import { FuncionarioFindallDataSource } from "./funcionario-findall-datasource";
     MatProgressSpinnerModule,
     MatIconModule,
     MatMenuModule,
-    MatProgressBarModule
+    MatProgressBarModule,
   ],
 })
 export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
@@ -67,6 +67,7 @@ export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
       sort: 'id',
     };
     this.dataSource.loadFuncionarios('', page);
+
     this.dataSource
       .getFuncionarioSubject()
       .pipe(delay(10))
@@ -96,7 +97,7 @@ export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
         distinctUntilChanged(),
         tap(() => {
           this.paginator.pageIndex = 0;
-          this.loadFuncionarioPage();
+          this.onPageDefault();
         })
       )
       .subscribe();
@@ -106,18 +107,16 @@ export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
 
     // on sort or paginate events, load a new page
     merge(this.sort.sortChange, this.paginator.page)
-      .pipe(tap(() => this.loadFuncionarioPage()))
+      .pipe(
+        tap(() => {
+          this.onPageDefault();
+        })
+      )
       .subscribe();
   }
 
-  loadFuncionarioPage() {
-    const page: Page = {
-      page: this.paginator.pageIndex,
-      size: this.paginator.pageSize,
-      sort: this.sort.active,
-    };
-
-    this.dataSource.loadFuncionarios(this.input.nativeElement.value, page);
+  loadFuncionarioPage(input: string, page: Page) {
+    this.dataSource.loadFuncionarios(input, page);
   }
 
   handlePageEvent(e: PageEvent) {
@@ -125,14 +124,7 @@ export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
     this.paginator.length = e.length;
     this.paginator.pageSize = e.pageSize;
     this.paginator.pageIndex = e.pageIndex;
-
-    const page: Page = {
-      page: this.paginator.pageIndex,
-      size: this.paginator.pageSize,
-      sort: this.sort.active,
-    };
-
-    this.dataSource.loadFuncionarios(this.input.nativeElement.value, page);
+    this.onPageDefault();
   }
   readonly dialog = inject(MatDialog);
 
@@ -144,15 +136,26 @@ export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
     this.openDialog('editar', data);
   }
 
+  onPageDefault() {
+    const page: Page = {
+      page: this.paginator.pageIndex,
+      size: this.paginator.pageSize,
+      sort: this.sort.active,
+    };
+    this.loadFuncionarioPage(this.input.nativeElement.value, page);
+  }
+
   onDeleteById(id: number) {
     if (confirm('Deseja realmente excluir registro de id=' + id)) {
       this.funcionarioService.deleteById(id).subscribe({
         next: (ret) => {
-          this.loadFuncionarioPage();
+          this.paginator.pageIndex = 0;
+          this.onPageDefault();
         },
         error: () => {
           alert('Erro ao tentar excluir registro! ' + id);
-          this.loadFuncionarioPage();
+          this.paginator.pageIndex = 0;
+          this.onPageDefault();
         },
       });
     }
@@ -170,7 +173,7 @@ export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
           case 'novo':
             this.funcionarioService.create(result).subscribe({
               next: (ret) => {
-                this.loadFuncionarioPage();
+                this.onPageDefault();
               },
               error: () => {
                 alert('Erro ao tentar cadastrar registro! ' + result.id);
@@ -180,7 +183,7 @@ export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
           case 'editar':
             this.funcionarioService.editById(result).subscribe({
               next: (ret) => {
-                this.loadFuncionarioPage();
+                this.onPageDefault();
               },
               error: () => {
                 alert('Erro ao tentar editar registro! ' + result.id);
