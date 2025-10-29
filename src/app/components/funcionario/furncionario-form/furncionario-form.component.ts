@@ -29,8 +29,8 @@ export class FurncionarioFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   form = this.fb.group({
     id: [0],
-    nome: ["ultimo registro", Validators.required],
-    cargo: ["999", Validators.required],
+    nome: ['ultimo registro', Validators.required],
+    cargo: ['999', Validators.required],
     salarioBase: [999, Validators.required],
   });
   readonly dialogRef = inject(MatDialogRef<FurncionarioFormComponent>);
@@ -38,7 +38,14 @@ export class FurncionarioFormComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data.opcao === 'editar') {
-      this.form.setValue(this.data.data);
+      const editarData = {
+        id: this.data.data.id,
+        nome: 'registro ' + this.data.data.id,
+        cargo: 'cargo' + this.data.data.id,
+        salarioBase: this.data.data.id,
+      };
+
+      this.form.setValue(editarData);
     }
   }
 

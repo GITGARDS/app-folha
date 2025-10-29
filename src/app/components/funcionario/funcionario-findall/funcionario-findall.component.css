@@ -25,3 +25,7 @@ td, th {
 .tabela{
   min-height: 650px;
 }
+
+.button-row {
+  max-width: 150px;
+}
