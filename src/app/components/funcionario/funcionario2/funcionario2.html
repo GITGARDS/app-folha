@@ -1,0 +1,23 @@
+<p>funcionario2 works!</p>
+
+@if (funcionarios) {
+<div class="cards">
+  @for (item of funcionarios; track $index) {
+  <!-- {{item | json}} -->
+  <div class="card">
+    <div class="header">
+      <div class="title">
+        <span>{{ item.id }}</span>
+      </div>
+      <div class="subtitle">
+        <span>{{ item.nome }}</span>
+      </div>
+    </div>
+    <div class="content">
+      {{ item.cargo }}
+      {{ item.salarioBase | currency }}
+    </div>
+  </div>
+  }
+</div>
+}

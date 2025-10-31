@@ -22,7 +22,7 @@ import { map, shareReplay } from "rxjs/operators";
     MatIconModule,
     AsyncPipe,
     RouterLink,
-    RouterOutlet
+    RouterOutlet,
   ],
 })
 export class NavigationComponent {
@@ -30,6 +30,9 @@ export class NavigationComponent {
     { name: 'Home', route: 'home', icon: 'home' },
     { name: 'About', route: 'about', icon: 'info' },
     { name: 'Funcionario', route: 'funcionario', icon: 'badge' },
+    { name: 'Funcionario2', route: 'funcionario2', icon: 'badge' },
+    { name: 'Proventos/Descontos', route: 'prodes', icon: 'drag_indicator' },
+    { name: 'Address Form', route: 'address-form', icon: 'post' },
   ];
 
   private breakpointObserver = inject(BreakpointObserver);
