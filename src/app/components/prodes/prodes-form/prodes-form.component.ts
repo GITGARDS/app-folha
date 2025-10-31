@@ -25,7 +25,7 @@ import { Prodes } from "../../../models/prodes";
     ReactiveFormsModule,
     MatDialogClose,
     MatDividerModule,
-    MatListModule
+    MatListModule,
   ],
 })
 export class ProdesFormComponent implements OnInit {
@@ -58,17 +58,7 @@ export class ProdesFormComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data.opcao === 'editar') {
-      const data: Prodes = {
-        id: this.data.data.id,
-        codigo: this.data.data.codigo,
-        descricao: this.data.data.descricao,
-        tipo: this.data.data.tipo,
-        automatico: this.data.data.automatico,
-        tipoValor: this.data.data.tipoValor,
-        valor: this.data.data.valor,
-        incidencia: this.data.data.incidencia,
-        ativo: this.data.data.ativo,
-      };
+      const data: Prodes = this.data.data;
       this.form.setValue(data);
     }
   }
@@ -78,17 +68,7 @@ export class ProdesFormComponent implements OnInit {
   }
 
   okClick() {
-    const data: Prodes = {
-      id: this.form.value.id!,
-      codigo: this.form.value.codigo!,
-      descricao: this.form.value.descricao!,
-      tipo: this.form.value.tipo!,
-      automatico: this.form.value.automatico!,
-      tipoValor: this.form.value.tipoValor!,
-      valor: this.form.value.valor!,
-      incidencia: this.form.value.incidencia!,
-      ativo: this.form.value.ativo!,
-    };
+    const data: Prodes = this.form.value as Prodes;
     this.dialogRef.close(data);
   }
 }
