@@ -32,44 +32,49 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
             <td mat-cell *matCellDef="let row">{{ row.id }}</td>
           </ng-container>
-          <ng-container matColumnDef="codigo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>CODIGO</th>
-            <td mat-cell *matCellDef="let row">{{ row.codigo }}</td>
+          <ng-container matColumnDef="cnpj">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>CNPJ</th>
+            <td mat-cell *matCellDef="let row">{{ row.cnpj }}</td>
           </ng-container>
-          <ng-container matColumnDef="descricao">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>DESCRICAO</th>
-            <td mat-cell *matCellDef="let row">{{ row.descricao }}</td>
+          <ng-container matColumnDef="razaoSocial">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>RAZAO SOCIAL</th>
+            <td mat-cell *matCellDef="let row">{{ row.razaoSocial }}</td>
           </ng-container>
-          <ng-container matColumnDef="tipo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>TIPO</th>
-            <td mat-cell *matCellDef="let row">{{ row.tipo }}</td>
+          <ng-container matColumnDef="nomeFantasia">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>nomeFantasia</th>
+            <td mat-cell *matCellDef="let row">{{ row.nomeFantasia }}</td>
           </ng-container>
-          <ng-container matColumnDef="automatico">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>AUTOMATICO</th>
-            <td mat-cell *matCellDef="let row">{{ row.automatico }}</td>
+          <ng-container matColumnDef="endereco">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>endereco</th>
+            <td mat-cell *matCellDef="let row">{{ row.endereco }}</td>
           </ng-container>
-          <ng-container matColumnDef="tipoValor">
-            <th mat-header-cell *matHeaderCellDef>T.VALOR</th>
-            <td mat-cell *matCellDef="let row">{{ row.tipoValor == 'P' ? '%' : '$' }}</td>
+          <ng-container matColumnDef="telefone">
+            <th mat-header-cell *matHeaderCellDef>telefone</th>
+            <td mat-cell *matCellDef="let row">{{ row.telefone }}</td>
           </ng-container>
-          <ng-container matColumnDef="valor">
-            <th mat-header-cell *matHeaderCellDef>VALOR</th>
-            <td mat-cell *matCellDef="let row">{{ row.valor }}</td>
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>email</th>
+            <td mat-cell *matCellDef="let row">{{ row.email }}</td>
           </ng-container>
-          <ng-container matColumnDef="incidencia">
-            <th mat-header-cell *matHeaderCellDef>INCIDENCIA</th>
-
-            <td mat-cell *matCellDef="let row">
-              @switch (row.incidencia) { @case (1) {
-              <p>INSS</p>
-              } @case (2) { <P>IRRF</P> } @case (3) { <P>FGTS</P> } @case (4) { <P>INSS, IRRF</P> }
-              @case (5) { <P>INSS, FGTS</P> } @case (6) { <P>IRRF, FGTS</P> } @case (9) {
-              <P>INSS, IRRF, FGTS</P> } }
-            </td>
+          <ng-container matColumnDef="cnaePrincipal">
+            <th mat-header-cell *matHeaderCellDef>cnaePrincipal</th>
+            <td mat-cell *matCellDef="let row">{{ row.cnaePrincipal }}</td>
           </ng-container>
-          <ng-container matColumnDef="ativo">
-            <th mat-header-cell *matHeaderCellDef>ATIVO</th>
-            <td mat-cell *matCellDef="let row">{{ row.ativo }}</td>
+          <ng-container matColumnDef="dataAbertura">
+            <th mat-header-cell *matHeaderCellDef>dataAbertura</th>
+            <td mat-cell *matCellDef="let row">{{ row.dataAbertura }}</td>
+          </ng-container>
+          <ng-container matColumnDef="regimeTributario">
+            <th mat-header-cell *matHeaderCellDef>regimeTributario</th>
+            <td mat-cell *matCellDef="let row">{{ row.regimeTributario }}</td>
+          </ng-container>
+          <ng-container matColumnDef="mesReferencia">
+            <th mat-header-cell *matHeaderCellDef>mesReferencia</th>
+            <td mat-cell *matCellDef="let row">{{ row.mesReferencia }}</td>
+          </ng-container>
+          <ng-container matColumnDef="anoReferencia">
+            <th mat-header-cell *matHeaderCellDef>anoReferencia</th>
+            <td mat-cell *matCellDef="let row">{{ row.anoReferencia }}</td>
           </ng-container>
           <ng-container matColumnDef="acoes">
             <th mat-header-cell *matHeaderCellDef>ACOES</th>

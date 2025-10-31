@@ -8,7 +8,7 @@ export interface Prodes {
   automatico: boolean;
   tipoValor: string;
   valor: number;
-  incidencia: string;
+  incidencia: number;
   ativo: boolean;
 }
 
@@ -34,7 +34,7 @@ export const ProdesInit: Prodes = {
   automatico: false,
   tipoValor: '',
   valor: 0,
-  incidencia: '',
+  incidencia: 0,
   ativo: true,
 };
 

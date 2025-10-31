@@ -14,16 +14,16 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatSort, MatSortModule } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
 import { debounceTime, delay, distinctUntilChanged, fromEvent, merge, tap } from "rxjs";
+import { Empresa, EmpresaInit, EmpresaPageable } from "../../../models/empresa";
 import { Page } from "../../../models/page";
-import { Prodes, ProdesInit, ProdesPageable } from "../../../models/prodes";
-import { ProdesService } from "../../../services/prodes.service";
-import { ProdesFormComponent } from "../prodes-form/prodes-form.component";
-import { ProdesFindallDataSource } from "./prodes-findall-datasource";
+import { EmpresaService } from "../../../services/empresa.service";
+import { EmpresaFormComponent } from "../empresa-form/empresa-form.component";
+import { EmpresaFindallDataSource } from "./empresa-findall-datasource";
 
 @Component({
-  selector: 'app-prodes-findall',
-  templateUrl: './prodes-findall.component.html',
-  styleUrl: './prodes-findall.component.css',
+  selector: 'app-empresa-findall',
+  templateUrl: './empresa-findall.component.html',
+  styleUrl: './empresa-findall.component.css',
   imports: [
     CommonModule,
     MatTableModule,
@@ -40,28 +40,31 @@ import { ProdesFindallDataSource } from "./prodes-findall-datasource";
     MatProgressBarModule,
   ],
 })
-export class ProdesFindallComponent implements OnInit, AfterViewInit {
+export class EmpresaFindallComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('input') input!: ElementRef;
-  dataSource!: ProdesFindallDataSource;
+  dataSource!: EmpresaFindallDataSource;
 
   displayedColumns = [
     'id',
-    'codigo',
-    'descricao',
-    'tipo',
-    'automatico',
-    'tipoValor',
-    'valor',
-    'incidencia',
-    'ativo',
+    'cnpj',
+    'razaoSocial',
+    'nomeFantasia',
+    'endereco',
+    'telefone',
+    'email',
+    'cnaePrincipal',
+    'dataAbertura',
+    'regimeTributario',
+    'mesReferencia',
+    'anoReferencia',
     'acoes',
   ];
 
-  prodesService = inject(ProdesService);
+  empresaService = inject(EmpresaService);
 
-  prodesPageable!: ProdesPageable;
+  empresaPageable!: EmpresaPageable;
 
   pageEvent!: PageEvent;
 
@@ -71,23 +74,23 @@ export class ProdesFindallComponent implements OnInit, AfterViewInit {
   pageSize = 10;
 
   ngOnInit(): void {
-    this.dataSource = new ProdesFindallDataSource(this.prodesService);
+    this.dataSource = new EmpresaFindallDataSource(this.empresaService);
     const page: Page = {
       page: this.pageIndex,
       size: this.pageSize,
       sort: 'id',
     };
-    this.dataSource.loadProdess('', page);
+    this.dataSource.loadEmpresas('', page);
 
     this.dataSource
-      .getProdesSubject()
+      .getEmpresaSubject()
       .pipe(delay(10))
       .subscribe({
         next: (ret) => {
-          this.prodesPageable = ret;
-          this.paginator.length = this.prodesPageable.totalElements;
-          this.paginator.pageIndex = this.prodesPageable.number;
-          this.paginator.pageSize = this.prodesPageable.size;
+          this.empresaPageable = ret;
+          this.paginator.length = this.empresaPageable.totalElements;
+          this.paginator.pageIndex = this.empresaPageable.number;
+          this.paginator.pageSize = this.empresaPageable.size;
         },
       });
   }
@@ -126,25 +129,8 @@ export class ProdesFindallComponent implements OnInit, AfterViewInit {
       .subscribe();
   }
 
-  getIncidencia(valor: number) {    
-    const incidencia = [
-      '',
-      'INSS',
-      'IRRF',
-      'FGTS',
-      'INSS, IRRF',
-      'INSS, FGTS',
-      'INSS, IRRF',
-      'IRRF, FGTS',
-      '',
-      '',
-      'INSS, IRRF, FGTS',
-    ];
-    return incidencia[valor];
-  }
-
-  loadProdesPage(input: string, page: Page) {
-    this.dataSource.loadProdess(input, page);
+  loadEmpresaPage(input: string, page: Page) {
+    this.dataSource.loadEmpresas(input, page);
   }
 
   handlePageEvent(e: PageEvent) {
@@ -157,10 +143,10 @@ export class ProdesFindallComponent implements OnInit, AfterViewInit {
   readonly dialog = inject(MatDialog);
 
   onCreate() {
-    this.openDialog('novo', ProdesInit);
+    this.openDialog('novo', EmpresaInit);
   }
 
-  onEditById(data: Prodes) {
+  onEditById(data: Empresa) {
     this.openDialog('editar', data);
   }
 
@@ -170,12 +156,12 @@ export class ProdesFindallComponent implements OnInit, AfterViewInit {
       size: this.paginator.pageSize,
       sort: this.sort.active,
     };
-    this.loadProdesPage(this.input.nativeElement.value, page);
+    this.loadEmpresaPage(this.input.nativeElement.value, page);
   }
 
   onDeleteById(id: number) {
     if (confirm('Deseja realmente excluir registro de id=' + id)) {
-      this.prodesService.deleteById(id).subscribe({
+      this.empresaService.deleteById(id).subscribe({
         next: (ret) => {
           this.paginator.pageIndex = 0;
           this.onPageDefault();
@@ -189,8 +175,8 @@ export class ProdesFindallComponent implements OnInit, AfterViewInit {
     }
   }
 
-  openDialog(opcao: string, data: Prodes): void {
-    const dialogRef = this.dialog.open(ProdesFormComponent, {
+  openDialog(opcao: string, data: Empresa): void {
+    const dialogRef = this.dialog.open(EmpresaFormComponent, {
       data: { opcao: opcao, data: data },
     });
 
@@ -199,7 +185,7 @@ export class ProdesFindallComponent implements OnInit, AfterViewInit {
       if (result !== undefined) {
         switch (opcao) {
           case 'novo':
-            this.prodesService.create(result).subscribe({
+            this.empresaService.create(result).subscribe({
               next: (ret) => {
                 this.onPageDefault();
               },
@@ -209,7 +195,7 @@ export class ProdesFindallComponent implements OnInit, AfterViewInit {
             });
             break;
           case 'editar':
-            this.prodesService.editById(result).subscribe({
+            this.empresaService.editById(result).subscribe({
               next: (ret) => {
                 this.onPageDefault();
               },

@@ -31,7 +31,7 @@
           </mat-form-field>
         </div>
       </div>
-      <hr />
+      <mat-divider></mat-divider>
       <div class="row">
         <div class="col">
           <mat-label class="matLabel">Tipo</mat-label>
@@ -43,7 +43,7 @@
           </mat-radio-group>
         </div>
       </div>
-      <hr />
+      <mat-divider></mat-divider>
       <div class="row">
         <div class="col">
           <mat-label class="matLabel">Automatico pelo sistema?</mat-label>
@@ -55,7 +55,7 @@
           </mat-radio-group>
         </div>
       </div>
-      <hr />
+      <mat-divider></mat-divider>
       <div class="row">
         <div class="col">
           <mat-label class="matLabel">Tipo de Valor</mat-label>
@@ -83,25 +83,20 @@
           </mat-form-field>
         </div>
       </div>
-      <hr />
+      <mat-divider></mat-divider>
       <div class="row">
         <div class="col">
           <mat-label class="matLabel">Incidencia</mat-label>
         </div>
         <div class="col">
           <mat-radio-group formControlName="incidencia">
-            <mat-radio-button value="">Nenhuma</mat-radio-button>
-            <mat-radio-button value="INSS">INSS</mat-radio-button>
-            <mat-radio-button value="IRRF">IRRF</mat-radio-button>
-            <mat-radio-button value="FGTS">FGTS</mat-radio-button>
-            <mat-radio-button value="INSS, IRRF">INSS, IRRF</mat-radio-button>
-            <mat-radio-button value="INSS, FGTS">INSS, FGTS</mat-radio-button>
-            <mat-radio-button value="IRRF, FGTS">IRRF, FGTS</mat-radio-button>
-            <mat-radio-button value="INSS, IRRF, FGTS">INSS, IRRF, FGTS</mat-radio-button>
+            @for (item of incidencia; track $index) {
+              <mat-radio-button [value]="item.value">{{item.label}}</mat-radio-button>
+            }
           </mat-radio-group>
         </div>
       </div>
-      <hr />
+      <mat-divider></mat-divider>
       <div class="row">
         <div class="col">
           <mat-label class="matLabel">Ativo</mat-label>
@@ -115,6 +110,8 @@
         </div>
       </div>
     </mat-card-content>
+    <mat-divider></mat-divider>
+
     <mat-card-actions>
       <button matButton [mat-dialog-close]="false" (click)="onNoClick()">Cancelar</button>
       <button

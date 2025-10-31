@@ -47,10 +47,10 @@ th {
 }
 
 .mat-column-id,
-.mat-column-codigo,
-.mat-column-tipo,
-.mat-column-automatico,
-.mat-column-tipoValor,
-.mat-column-ativo {
-  width: 64px;
+.mat-column-cnaePrincipal,
+.mat-column-dataAbertura,
+.mat-column-mesReferencia,
+.mat-column-anoReferencia
+ {
+  width: 35px;
 }
