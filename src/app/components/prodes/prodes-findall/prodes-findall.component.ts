@@ -46,19 +46,6 @@ export class ProdesFindallComponent implements OnInit, AfterViewInit {
   @ViewChild('input') input!: ElementRef;
   dataSource!: ProdesFindallDataSource;
 
-  displayedColumns = [
-    'id',
-    'codigo',
-    'descricao',
-    'tipo',
-    'automatico',
-    'tipoValor',
-    'valor',
-    'incidencia',
-    'ativo',
-    'acoes',
-  ];
-
   prodesService = inject(ProdesService);
 
   prodesPageable!: ProdesPageable;
@@ -70,7 +57,24 @@ export class ProdesFindallComponent implements OnInit, AfterViewInit {
   pageIndex = 0;
   pageSize = 10;
 
+  displayedColumnsDef = [
+    { label: 'id', header: '#' },
+    { label: 'codigo', header: 'CODIGO' },
+    { label: 'descricao', header: 'DESCRICAO' },
+    { label: 'tipo', header: 'TIPO' },
+    { label: 'automatico', header: 'AUTO' },
+    { label: 'tipoValor', header: 'T.VALOR' },
+    { label: 'valor', header: 'VALOR' },
+    { label: 'incidencia', header: 'INCIDENCIA' },
+    { label: 'ativo', header: 'ATIVO' },
+  ];
+  displayedColumns: string[] = [];
+
   ngOnInit(): void {
+    this.displayedColumns = this.displayedColumns.concat(
+      this.displayedColumnsDef.map((x) => x.label)
+    );
+    this.displayedColumns.push('action');
     this.dataSource = new ProdesFindallDataSource(this.prodesService);
     const page: Page = {
       page: this.pageIndex,
@@ -126,7 +130,7 @@ export class ProdesFindallComponent implements OnInit, AfterViewInit {
       .subscribe();
   }
 
-  getIncidencia(valor: number) {    
+  getIncidencia(valor: number) {
     const incidencia = [
       '',
       'INSS',

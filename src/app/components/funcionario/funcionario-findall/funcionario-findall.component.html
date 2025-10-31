@@ -28,35 +28,16 @@
           matSortDirection="asc"
           aria-label="Elements"
         >
-          <!-- Id Column -->
-          <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
-            <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+          @for (item of displayedColumnsDef; track $index) {
+          <ng-container [matColumnDef]="item.label">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ item.header }}</th>
+            <td mat-cell *matCellDef="let row">{{ row[item.label] }}</td>
           </ng-container>
 
-          <!-- Nome Column -->
-          <ng-container matColumnDef="nome">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
-            <td mat-cell *matCellDef="let row">{{ row.nome }}</td>
-          </ng-container>
+          }
 
-          <!-- Cargo Column -->
-          <ng-container matColumnDef="cargo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Cargo</th>
-            <td mat-cell *matCellDef="let row">{{ row.cargo }}</td>
-          </ng-container>
-
-          <!-- Salario Base Column -->
-          <ng-container matColumnDef="salarioBase">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Salario Base</th>
-            <td mat-cell *matCellDef="let row">
-              {{ row.salarioBase | currency }}
-            </td>
-          </ng-container>
-
-          <!-- Acoes Column -->
-          <ng-container matColumnDef="acoes">
-            <th mat-header-cell *matHeaderCellDef>Acoes</th>
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef>ACOES</th>
             <td mat-cell *matCellDef="let row">
               <button
                 matIconButton

@@ -46,22 +46,6 @@ export class EmpresaFindallComponent implements OnInit, AfterViewInit {
   @ViewChild('input') input!: ElementRef;
   dataSource!: EmpresaFindallDataSource;
 
-  displayedColumns = [
-    'id',
-    'cnpj',
-    'razaoSocial',
-    'nomeFantasia',
-    'endereco',
-    'telefone',
-    'email',
-    'cnaePrincipal',
-    'dataAbertura',
-    'regimeTributario',
-    'mesReferencia',
-    'anoReferencia',
-    'acoes',
-  ];
-
   empresaService = inject(EmpresaService);
 
   empresaPageable!: EmpresaPageable;
@@ -73,7 +57,28 @@ export class EmpresaFindallComponent implements OnInit, AfterViewInit {
   pageIndex = 0;
   pageSize = 10;
 
+  displayedColumnsDef = [
+    { label: 'id', header: '#' },
+    { label: 'cnpj', header: 'CNPJ' },
+    { label: 'razaoSocial', header: 'RAZAO SOCIAL' },
+    { label: 'nomeFantasia', header: 'NOME FANTASIA' },
+    { label: 'endereco', header: 'ENDERECO' },
+    { label: 'telefone', header: 'TELEFONE' },
+    { label: 'email', header: 'EMAIL' },
+    { label: 'cnaePrincipal', header: 'CNAE' },
+    { label: 'dataAbertura', header: 'ABERTURA' },
+    { label: 'regimeTributario', header: 'REGIME TRIB' },
+    { label: 'mesReferencia', header: 'MES REF' },
+    { label: 'anoReferencia', header: 'ANO REF' },
+  ];
+  displayedColumns: string[] = [];
+
   ngOnInit(): void {
+    this.displayedColumns = this.displayedColumns.concat(
+      this.displayedColumnsDef.map((x) => x.label)
+    );
+    this.displayedColumns.push('action');
+
     this.dataSource = new EmpresaFindallDataSource(this.empresaService);
     const page: Page = {
       page: this.pageIndex,

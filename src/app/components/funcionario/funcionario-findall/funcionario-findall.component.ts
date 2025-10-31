@@ -46,8 +46,6 @@ export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
   @ViewChild('input') input!: ElementRef;
   dataSource!: FuncionarioFindallDataSource;
 
-  displayedColumns = ['id', 'nome', 'cargo', 'salarioBase', 'acoes'];
-
   funcionarioService = inject(FuncionarioService);
 
   funcionarioPageable!: FuncionarioPageable;
@@ -59,7 +57,20 @@ export class FuncionarioFindallComponent implements OnInit, AfterViewInit {
   pageIndex = 0;
   pageSize = 10;
 
+  displayedColumnsDef = [
+    { label: 'id', header: '#' },
+    { label: 'nome', header: 'NOME' },
+    { label: 'cargo', header: 'CARGO' },
+    { label: 'salarioBase', header: 'SALARIO BASE' },
+  ];
+  displayedColumns: string[] = [];
+
   ngOnInit(): void {
+    this.displayedColumns = this.displayedColumns.concat(
+      this.displayedColumnsDef.map((x) => x.label)
+    );
+    this.displayedColumns.push('action');
+
     this.dataSource = new FuncionarioFindallDataSource(this.funcionarioService);
     const page: Page = {
       page: this.pageIndex,
