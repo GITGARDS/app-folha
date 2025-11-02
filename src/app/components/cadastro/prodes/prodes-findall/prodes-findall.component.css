@@ -107,8 +107,12 @@ tr.example-element-row:not(.example-expanded-row):active {
   opacity: 1;
 }
 
-.example-element-campos .text  {
-  font-weight: bold;
+.example-element-campos .label,
+.text {
+  font-size: small;
+}
+.example-element-campos .text {
+  font-weight: 500;
 }
 
 .example-toggle-button {

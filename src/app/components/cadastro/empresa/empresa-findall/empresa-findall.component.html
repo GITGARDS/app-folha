@@ -47,21 +47,21 @@
           <ng-container matColumnDef="secondary">
             <td mat-cell [attr.colspan]="displayedColumns.length" *matCellDef="let row">
               <div class="example-element-detail">
-                <mat-card class="example-element-diagram" [appearance]="'filled'">
+                <mat-card class="example-element-diagram" [appearance]="'outlined'">
                   <div class="example-element-campos">
-                    <span>Nome Fantasia</span>
+                    <span class="label">Nome Fantasia</span>
                     <span class="text">{{ row.nomeFantasia }}</span>
                   </div>
                   <div class="example-element-campos">
-                    <span>Endereco</span>
+                    <span class="label">Endereco</span>
                     <span class="text">{{ row.endereco }}</span>
                   </div>
                   <div class="example-element-campos">
-                    <span>Telefone</span>
+                    <span class="label">Telefone</span>
                     <span class="text">{{ row.telefone }}</span>
                   </div>
                   <div class="example-element-campos">
-                    <span>Email</span>
+                    <span class="label">Email</span>
                     <span class="text">{{ row.email }}</span>
                   </div>
                 </mat-card>

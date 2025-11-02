@@ -74,6 +74,9 @@ th {
   opacity: 1;
 }
 
-.example-element-campos .text {
-  font-weight: bold;
+.example-element-campos .label, .text  {
+  font-size: small;
+}
+.example-element-campos .text  {
+  font-weight: 500;
 }

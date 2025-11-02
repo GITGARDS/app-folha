@@ -64,29 +64,29 @@
                 [class.example-element-detail-wrapper-expanded]="isExpanded(row)"
               >
                 <div class="example-element-detail">
-                  <mat-card class="example-element-diagram" [appearance]="'filled'">
-                    <div class="example-element-campos">
-                      <span>Tipo</span>
+                  <mat-card class="example-element-diagram" [appearance]="'outlined'">
+                    <div class="example-element-campos">                      
+                      <span class="label">Tipo</span>
                       <span class="text">{{ row.tipo }}</span>
                     </div>
 
                     <div class="example-element-campos">
-                      <span>Automatico</span>
+                      <span class="label">Automatico</span>
                       <span class="text">{{ row.automatico }}</span>
                     </div>
 
                     <div class="example-element-campos">
-                      <span>Tipo Valor</span>
+                      <span class="label">Tipo Valor</span>
                       <span class="text">{{ row.tipoValor }}</span>
                     </div>
 
                     <div class="example-element-campos">
-                      <span>Valor</span>
+                      <span class="label">Valor</span>
                       <span class="text">{{ row.valor }}</span>
                     </div>
 
                     <div class="example-element-campos">
-                      <span>Incidencia</span>
+                      <span class="label">Incidencia</span>
                       <span class="text">{{ row.incidencia }}</span>
                     </div>
                   </mat-card>
