@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
+import { MatCardModule } from "@angular/material/card";
 import { MatDialog } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
@@ -39,9 +40,19 @@ import { ProdesFindallDataSource } from "./prodes-findall-datasource";
     MatIconModule,
     MatMenuModule,
     MatProgressBarModule,
+    MatCardModule
   ],
 })
 export class ProdesFindallComponent implements OnInit, AfterViewInit {
+  isExpanded(element: any) {
+    return this.expandedElement === element;
+  }
+  toggle(element: any) {
+    this.expandedElement = this.isExpanded(element) ? null : element;
+  }
+
+  expandedElement!: Prodes | null;
+
   title = 'proventos/descontos';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -63,11 +74,11 @@ export class ProdesFindallComponent implements OnInit, AfterViewInit {
   displayedColumnsDef: DisplayedColumnsDef[] = [
     { label: 'codigo', header: 'CODIGO' },
     { label: 'descricao', header: 'DESCRICAO' },
-    { label: 'tipo', header: 'TIPO' },
-    { label: 'automatico', header: 'AUTO' },
-    { label: 'tipoValor', header: 'T.VALOR' },
-    { label: 'valor', header: 'VALOR' },
-    { label: 'incidencia', header: 'INCIDENCIA' },
+    // { label: 'tipo', header: 'TIPO' },
+    // { label: 'automatico', header: 'AUTO' },
+    // { label: 'tipoValor', header: 'T.VALOR' },
+    // { label: 'valor', header: 'VALOR' },
+    // { label: 'incidencia', header: 'INCIDENCIA' },
     { label: 'ativo', header: 'ATIVO' },
   ];
   displayedColumns: string[] = [];
@@ -75,6 +86,7 @@ export class ProdesFindallComponent implements OnInit, AfterViewInit {
   getDisplayedColumns(valor: DisplayedColumnsDef[]) {
     let ret: string[] = ['id'];
     ret = ret.concat(valor.map((x) => x.label));
+    ret.push('expand');
     ret.push('action');
     return ret;
   }

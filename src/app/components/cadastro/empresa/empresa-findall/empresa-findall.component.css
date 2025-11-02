@@ -45,11 +45,35 @@ th {
 .mat-column-cnaePrincipal,
 .mat-column-dataAbertura,
 .mat-column-mesReferencia,
-.mat-column-anoReferencia
- {
+.mat-column-anoReferencia {
   width: 64px;
 }
 
 .mat-mdc-table-sticky {
   background: #c6d7f6;
+}
+
+.example-element-detail {
+  display: flex;
+  min-height: 0;
+}
+
+.example-element-diagram {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  padding: 8px;
+  font-weight: lighter;
+  margin: 8px 0;
+}
+
+.example-element-campos {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  opacity: 1;
+}
+
+.example-element-campos .text {
+  font-weight: bold;
 }

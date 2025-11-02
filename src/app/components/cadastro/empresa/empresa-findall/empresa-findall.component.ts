@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, inject } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
+import { MatCardModule } from "@angular/material/card";
 import { MatDialog } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
@@ -39,6 +40,7 @@ import { EmpresaFindallDataSource } from "./empresa-findall-datasource";
     MatIconModule,
     MatMenuModule,
     MatProgressBarModule,
+    MatCardModule
   ],
 })
 export class EmpresaFindallComponent implements OnInit, AfterViewInit {
@@ -63,10 +65,10 @@ export class EmpresaFindallComponent implements OnInit, AfterViewInit {
   displayedColumnsDef: DisplayedColumnsDef[] = [
     { label: 'cnpj', header: 'CNPJ' },
     { label: 'razaoSocial', header: 'RAZAO SOCIAL' },
-    { label: 'nomeFantasia', header: 'NOME FANTASIA' },
-    { label: 'endereco', header: 'ENDERECO' },
-    { label: 'telefone', header: 'TELEFONE' },
-    { label: 'email', header: 'EMAIL' },
+    // { label: 'nomeFantasia', header: 'NOME FANTASIA' },
+    // { label: 'endereco', header: 'ENDERECO' },
+    // { label: 'telefone', header: 'TELEFONE' },
+    // { label: 'email', header: 'EMAIL' },
     { label: 'cnaePrincipal', header: 'CNAE' },
     { label: 'dataAbertura', header: 'ABERTURA' },
     { label: 'regimeTributario', header: 'REGIME TRIB' },

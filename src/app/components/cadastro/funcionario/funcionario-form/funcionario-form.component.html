@@ -1,9 +1,11 @@
 <form [formGroup]="form" novalidate>
   <mat-card class="shipping-card">
     <mat-card-header>
-      <mat-card-title style="font-weight: bold; text-transform: uppercase;">{{ title }}</mat-card-title>
-      <mat-card-subtitle  style="font-size: small">
-        {{ data.opcao === 'editar' ? 'Editando id=' + data.data.id : 'Novo registro' }}
+      <mat-card-title style="font-weight: bold; text-transform: uppercase">{{
+        title
+      }}</mat-card-title>
+      <mat-card-subtitle style="font-size: small">
+        {{ data.opcao === 'editar' ? 'Editando => ' + data.data.id + "-" + data.data.nome : 'Novo registro' }}
       </mat-card-subtitle>
     </mat-card-header>
     <br />
