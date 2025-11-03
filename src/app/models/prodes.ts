@@ -51,3 +51,35 @@ export const ProdesPageableInit: ProdesPageable = {
   numberOfElements: 0,
   empty: false,
 };
+
+export type Incidencia = {
+  value: number;
+  label: string;
+};
+
+export const incidencia: Incidencia[] = [
+  { value: 0, label: 'Nenhum' },
+  { value: 1, label: 'INSS' },
+  { value: 2, label: 'IRRF' },
+  { value: 3, label: 'FGTS' },
+  { value: 4, label: 'INSS, IRRF' },
+  { value: 5, label: 'INSS, FGTS' },
+  { value: 6, label: 'IRRF, FGTS' },
+  { value: 9, label: 'INSS, IRRF, FGTS' },
+];
+
+export const getIncidencia = (valor: number) => {  
+    const incidencia = [
+      '',
+      'INSS',
+      'IRRF',
+      'FGTS',
+      'INSS, IRRF',
+      'INSS, FGTS',
+      'IRRF, FGTS',
+      '',
+      '',
+      'INSS, IRRF, FGTS',
+    ];
+    return incidencia[valor];
+  }

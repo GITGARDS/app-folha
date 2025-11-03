@@ -111,8 +111,14 @@ tr.example-element-row:not(.example-expanded-row):active {
 .text {
   font-size: small;
 }
+.example-element-campos .label {
+  width: 120px;
+  text-align: end;
+  font-weight: bold;
+}
 .example-element-campos .text {
   font-weight: 500;
+  color: blue;
 }
 
 .example-toggle-button {

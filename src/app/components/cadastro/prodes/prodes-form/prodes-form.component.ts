@@ -9,7 +9,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatListModule } from "@angular/material/list";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatSelectModule } from "@angular/material/select";
-import { Prodes } from "../../../../models/prodes";
+import { Prodes, incidencia } from "../../../../models/prodes";
 
 @Component({
   selector: 'app-prodes-form',
@@ -44,16 +44,7 @@ export class ProdesFormComponent implements OnInit {
     ativo: [true, Validators.required],
   });
 
-  incidencia = [
-    { value: 0, label: 'Nenhum' },
-    { value: 1, label: 'INSS' },
-    { value: 2, label: 'IRRF' },
-    { value: 3, label: 'FGTS' },
-    { value: 4, label: 'INSS, IRRF' },
-    { value: 5, label: 'INSS, FGTS' },
-    { value: 6, label: 'IRRF, FGTS' },
-    { value: 9, label: 'INSS, IRRF, FGTS' },
-  ];
+  readonly onIncidencia = incidencia;
 
   readonly dialogRef = inject(MatDialogRef<ProdesFormComponent>);
   readonly data = inject<any>(MAT_DIALOG_DATA);

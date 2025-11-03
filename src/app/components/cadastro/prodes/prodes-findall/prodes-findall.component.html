@@ -64,30 +64,43 @@
                 [class.example-element-detail-wrapper-expanded]="isExpanded(row)"
               >
                 <div class="example-element-detail">
-                  <mat-card class="example-element-diagram" [appearance]="'outlined'">
-                    <div class="example-element-campos">                      
-                      <span class="label">Tipo</span>
+                  <mat-card class="example-element-diagram" [appearance]="'filled'">
+                    <div class="example-element-campos">
+                      <mat-label class="label">Tipo:</mat-label>
                       <span class="text">{{ row.tipo }}</span>
+                      @switch (row.tipo) { @case ("P") {<span class="text">P R O V E N T O</span>}
+                      @default {<span class="text">D E S C O N T O</span>} }
                     </div>
 
                     <div class="example-element-campos">
-                      <span class="label">Automatico</span>
-                      <span class="text">{{ row.automatico }}</span>
+                      <span class="label">Automatico: </span>
+                      @switch (row.automatico) { @case (true) {<span class="text">Sim</span>}
+                      @default {<span class="text">Nao</span>} }
                     </div>
 
                     <div class="example-element-campos">
-                      <span class="label">Tipo Valor</span>
-                      <span class="text">{{ row.tipoValor }}</span>
+                      <span class="label">Tipo Valor: </span>
+                      @switch (row.tipoValor) { @case ("P") {<span class="text">%</span>} @default
+                      {<span class="text">$</span>} }
                     </div>
 
                     <div class="example-element-campos">
-                      <span class="label">Valor</span>
+                      <span class="label">Valor: </span>
                       <span class="text">{{ row.valor }}</span>
                     </div>
 
                     <div class="example-element-campos">
-                      <span class="label">Incidencia</span>
-                      <span class="text">{{ row.incidencia }}</span>
+                      <span class="label">Incidencia: </span>
+                      @switch (row.incidencia) { @case (0) {<span class="text">---</span>} @case (1)
+                      {<span class="text">INSS</span>} @case (2) {<span class="text">IRRF</span>}
+                      @case (3) {<span class="text">FGTS</span>} @case (4) {<span class="text"
+                        >INSS, IRRF</span
+                      >} @case (5) {<span class="text">INSS, FGTS</span>} @case (6) {<span
+                        class="text"
+                        >IRRF, FGTS</span
+                      >} @case (9) {<span class="text">INSS, IRRF, FGTS</span>} }
+
+                      <!-- <span class="text">{{ onGetIncidencia(row.incidencia)}}</span> -->
                     </div>
                   </mat-card>
                 </div>

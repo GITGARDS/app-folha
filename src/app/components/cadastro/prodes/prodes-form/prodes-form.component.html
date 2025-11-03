@@ -89,7 +89,7 @@
         </div>
         <div class="col">
           <mat-radio-group formControlName="incidencia">
-            @for (item of incidencia; track $index) {
+            @for (item of onIncidencia; track $index) {
               <mat-radio-button [value]="item.value">{{item.label}}</mat-radio-button>
             }
           </mat-radio-group>

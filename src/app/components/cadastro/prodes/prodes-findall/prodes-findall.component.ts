@@ -17,7 +17,7 @@ import { MatTableModule } from "@angular/material/table";
 import { debounceTime, delay, distinctUntilChanged, fromEvent, merge, tap } from "rxjs";
 import { DisplayedColumnsDef } from "../../../../models/displayColumnsDef";
 import { Page } from "../../../../models/page";
-import { Prodes, ProdesInit, ProdesPageable } from "../../../../models/prodes";
+import { Prodes, ProdesInit, ProdesPageable, getIncidencia } from "../../../../models/prodes";
 import { ProdesService } from "../../../../services/prodes.service";
 import { ProdesFormComponent } from "../prodes-form/prodes-form.component";
 import { ProdesFindallDataSource } from "./prodes-findall-datasource";
@@ -91,6 +91,8 @@ export class ProdesFindallComponent implements OnInit, AfterViewInit {
     return ret;
   }
 
+  readonly onGetIncidencia = getIncidencia;
+
   ngOnInit(): void {
     this.displayedColumns = this.getDisplayedColumns(this.displayedColumnsDef);
     this.dataSource = new ProdesFindallDataSource(this.prodesService);
@@ -146,23 +148,6 @@ export class ProdesFindallComponent implements OnInit, AfterViewInit {
         })
       )
       .subscribe();
-  }
-
-  getIncidencia(valor: number) {
-    const incidencia = [
-      '',
-      'INSS',
-      'IRRF',
-      'FGTS',
-      'INSS, IRRF',
-      'INSS, FGTS',
-      'INSS, IRRF',
-      'IRRF, FGTS',
-      '',
-      '',
-      'INSS, IRRF, FGTS',
-    ];
-    return incidencia[valor];
   }
 
   loadProdesPage(input: string, page: Page) {

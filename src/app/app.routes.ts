@@ -3,7 +3,7 @@ import { EmpresaFindallComponent } from "./components/cadastro/empresa/empresa-f
 import { FuncionarioFindallComponent } from "./components/cadastro/funcionario/funcionario-findall/funcionario-findall.component";
 import { ProdesFindallComponent } from "./components/cadastro/prodes/prodes-findall/prodes-findall.component";
 import { About } from "./components/layout/about/about";
-import { Home } from "./components/layout/home/home";
+import { HomeComponent } from "./components/layout/home/home.component";
 import { NavigationComponent } from "./components/layout/navigation/navigation.component";
 import { AddressFormComponent } from "./components/schematic/address-form/address-form.component";
 
@@ -19,7 +19,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'home',
-        component: Home,
+        component: HomeComponent,
       },
       {
         path: 'about',

@@ -1,8 +1,10 @@
 <form [formGroup]="form" novalidate>
   <mat-card class="shipping-card">
     <mat-card-header>
-      <mat-card-title style="font-weight: bold; text-transform: uppercase;">{{ title }}</mat-card-title>
-      <mat-card-subtitle  style="font-size: small">
+      <mat-card-title style="font-weight: bold; text-transform: uppercase">{{
+        title
+      }}</mat-card-title>
+      <mat-card-subtitle style="font-size: small">
         {{ data.opcao === 'editar' ? 'Editando id=' + data.data.id : 'Novo registro' }}
       </mat-card-subtitle>
     </mat-card-header>
@@ -48,7 +50,7 @@
         <div class="col">
           <mat-form-field>
             <mat-label>telefone</mat-label>
-            <input matInput formControlName="telefone" />
+            <input matInput formControlName="telefone" type="tel" />
           </mat-form-field>
         </div>
         <div class="col">
@@ -66,9 +68,17 @@
           </mat-form-field>
         </div>
         <div class="col">
-          <mat-form-field>
+          <!-- <mat-form-field>
             <mat-label>dataAbertura</mat-label>
-            <input matInput formControlName="dataAbertura" type="date" />
+            <input matInput [matDatepicker]="picker" formControlName="dataAbertura" type="date" />
+          </mat-form-field> -->
+
+          <mat-form-field>
+            <mat-label>Data Abertura</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="dataAbertura" />
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
         </div>
       </div>

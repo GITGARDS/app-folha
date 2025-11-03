@@ -1,8 +1,10 @@
 import { CommonModule } from "@angular/common";
-import { Component, OnInit, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, OnInit, inject } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
+import { provideNativeDateAdapter } from "@angular/material/core";
+import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MAT_DIALOG_DATA, MatDialogClose, MatDialogRef } from "@angular/material/dialog";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatInputModule } from "@angular/material/input";
@@ -26,7 +28,10 @@ import { Empresa } from "../../../../models/empresa";
     MatDialogClose,
     MatDividerModule,
     MatListModule,
+    MatDatepickerModule,
   ],
+  providers:[provideNativeDateAdapter()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmpresaFormComponent implements OnInit {
   title = 'empresa';
