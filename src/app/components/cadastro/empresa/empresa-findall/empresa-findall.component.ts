@@ -40,7 +40,7 @@ import { EmpresaFindallDataSource } from "./empresa-findall-datasource";
     MatIconModule,
     MatMenuModule,
     MatProgressBarModule,
-    MatCardModule
+    MatCardModule,
   ],
 })
 export class EmpresaFindallComponent implements OnInit, AfterViewInit {
@@ -92,6 +92,7 @@ export class EmpresaFindallComponent implements OnInit, AfterViewInit {
       page: this.pageIndex,
       size: this.pageSize,
       sort: 'id',
+      sortDirection: 'asc',
     };
     this.dataSource.loadEmpresas('', page);
 
@@ -139,7 +140,18 @@ export class EmpresaFindallComponent implements OnInit, AfterViewInit {
           this.onPageDefault();
         })
       )
-      .subscribe();
+
+      .subscribe({
+        next: (ret: any) => {
+          const page: Page = {
+            page: this.paginator.pageIndex,
+            size: this.paginator.pageSize,
+            sort: ret.active,
+            sortDirection: ret.direction,
+          };
+          this.loadEmpresaPage(this.input.nativeElement.value, page);
+        },
+      });
   }
 
   loadEmpresaPage(input: string, page: Page) {
@@ -168,6 +180,7 @@ export class EmpresaFindallComponent implements OnInit, AfterViewInit {
       page: this.paginator.pageIndex,
       size: this.paginator.pageSize,
       sort: this.sort.active,
+      sortDirection: this.sort.direction,
     };
     this.loadEmpresaPage(this.input.nativeElement.value, page);
   }

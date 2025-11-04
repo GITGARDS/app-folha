@@ -60,7 +60,8 @@ export abstract class GenericHttpService<T extends Entity, P extends  EntityPg> 
           .set('filter', filter)
           .set('page', page.page)
           .set('size', page.size)
-          .set('sort', page.sort),
+          .set('sort', page.sort)
+          .set('sortDirection', page.sortDirection)
       })
       .pipe(take(1));
   }
